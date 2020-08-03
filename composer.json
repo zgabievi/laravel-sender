@@ -1,0 +1,35 @@
+{
+    "name": "zgabievi/laravel-sender",
+    "description": "SENDER.GE Integration for Laravel",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Zura Gabievi",
+            "email": "zura.gabievi@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Zorb\\Onway\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^7.2",
+        "bensampo/laravel-enum": "^2.1",
+        "illuminate/config": "^6.0|^7.0",
+        "illuminate/support": "^6.0|^7.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+              "Zorb\\Sender\\SenderServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
