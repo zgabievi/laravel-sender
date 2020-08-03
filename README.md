@@ -69,8 +69,8 @@ Successful result will return following data:
 
 #### Message types can be:
 
-1 - Advertisement (with SMS NO)
-2 - Information (Without SMS NO)
+1. Advertisement (with SMS NO)
+2. Information (Without SMS NO)
 
 These types can be found in `Zorb\Sender\Enums\MessageType`;
 
@@ -95,9 +95,9 @@ Successful result will return following data:
 ```
 
 #### Status id can be:
-0 - Pending
-1 - Delivered
-2 - Undelivered
+0. Pending
+1. Delivered
+2. Undelivered
 
 These types can be found in `Zorb\Sender\Enums\MessageStatus`;
 
