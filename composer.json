@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Zorb\\Onway\\": "src/"
+            "Zorb\\Sender\\": "src/"
         }
     },
     "require": {
