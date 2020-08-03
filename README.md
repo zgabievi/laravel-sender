@@ -7,6 +7,7 @@
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
+- [Notification](#notification)
 - [Configuration](#configuration)
 - [License](#license)
 
@@ -100,6 +101,29 @@ Successful result will return following data:
 2. Undelivered
 
 These types can be found in `Zorb\Sender\Enums\MessageStatus`;
+
+## Notification
+
+You can you this package as notification channel.
+
+```php
+use Zorb\Sender\Channels\SenderChannel;
+use Zorb\Sender\Notifications\SmsMessage;
+
+//
+public function via($notifiable)
+{
+    return [SenderChannel::class];
+}
+
+//
+public function toTwilioSms($notifiable): SmsMessage
+{
+    return (new SmsMessage())
+        ->content('Your message goes here.')
+        ->recipient($notifiable->phone);
+}
+```
 
 ## Configuration
 
