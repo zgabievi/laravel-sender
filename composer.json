@@ -26,7 +26,7 @@
               "Zorb\\Sender\\SenderServiceProvider"
             ],
             "aliases": {
-                "Sender": "Zorb\\Sender\\SenderFacade"
+                "Sender": "Zorb\\Sender\\Facades\\Sender"
             }
         }
     },
