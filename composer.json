@@ -24,7 +24,10 @@
         "laravel": {
             "providers": [
               "Zorb\\Sender\\SenderServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "Sender": "Zorb\\Sender\\SenderFacade"
+            }
         }
     },
     "config": {
