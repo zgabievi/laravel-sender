@@ -2,7 +2,7 @@
 
 namespace Zorb\Sender\Notifications;
 
-class SmsMessage
+class SMSMessage
 {
     /**
      * @var string
@@ -26,7 +26,7 @@ class SmsMessage
      * @param string $recipient
      * @return $this
      */
-    public function recipient(string $recipient): SmsMessage
+    public function recipient(string $recipient): SMSMessage
     {
         $this->_recipient = $recipient;
         return $this;
@@ -44,7 +44,7 @@ class SmsMessage
      * @param string $content
      * @return $this
      */
-    public function content(string $content): SmsMessage
+    public function content(string $content): SMSMessage
     {
         $this->_content = $content;
         return $this;

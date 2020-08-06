@@ -7,10 +7,17 @@ use Zorb\Sender\Enums\MessageType;
 
 class Sender
 {
-    //
+    /**
+     * Send message to recipient
+     *
+     * @param string $mobile
+     * @param string $message
+     * @param int $type
+     * @return mixed
+     */
     public function send(string $mobile, string $message, $type = MessageType::Information)
     {
-        return $this->postRequest([
+        return $this->request([
             'apikey' => config('sender.api_key'),
             'destination' => $mobile,
             'content' => $message,
@@ -18,23 +25,34 @@ class Sender
         ], 'send');
     }
 
-    //
-    public function report(int $messageId)
+    /**
+     * Check message status by message id
+     *
+     * @param int $message_id
+     * @return mixed
+     */
+    public function status(int $message_id)
     {
-        return $this->postRequest([
+        return $this->request([
             'apikey' => config('sender.api_key'),
-            'messageId' => $messageId
+            'messageId' => $message_id
         ], 'callback');
     }
 
-    //
-    protected function postRequest(array $fields, string $method)
+    /**
+     * Send post request of requested method
+     *
+     * @param array $params
+     * @param string $method
+     * @return mixed
+     */
+    protected function request(array $params, string $method)
     {
-        $fields_string = http_build_query($fields);
+        $query_params = http_build_query($params);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, config('sender.api_url') . "/{$method}.php");
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $query_params);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         $result = curl_exec($ch);

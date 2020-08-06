@@ -1,12 +1,14 @@
 # SENDER.GE Integration for Laravel
 
-[![Packagist](https://img.shields.io/packagist/v/zgabievi/laravel-sender.svg?v=2)](https://packagist.org/packages/zgabievi/laravel-sender)
-[![Packagist](https://img.shields.io/packagist/dt/zgabievi/laravel-sender.svg?v=2)](https://packagist.org/packages/zgabievi/laravel-sender)
-[![license](https://img.shields.io/github/license/zgabievi/laravel-sender.svg?v=2)](https://packagist.org/packages/zgabievi/laravel-sender)
+[![Packagist](https://img.shields.io/packagist/v/zgabievi/laravel-sender.svg)](https://packagist.org/packages/zgabievi/laravel-sender)
+[![Packagist](https://img.shields.io/packagist/dt/zgabievi/laravel-sender.svg)](https://packagist.org/packages/zgabievi/laravel-sender)
+[![license](https://img.shields.io/github/license/zgabievi/laravel-sender.svg)](https://packagist.org/packages/zgabievi/laravel-sender)
 
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
+    - [Send Message](#send-message)
+    - [Check Status](#check-status)
 - [Notification](#notification)
 - [Configuration](#configuration)
 - [License](#license)
@@ -15,7 +17,7 @@
 
 To get started, you need to install package:
 
-```sh
+```shell script
 composer require zgabievi/laravel-sender
 ```
 
@@ -31,7 +33,7 @@ If your laravel version is older than 5.5, then add this to your service provide
 
 You can publish config file using this command:
 
-```sh
+```shell script
 php artisan vendor:publish --provider="Zorb\Sender\SenderServiceProvider"
 ```
 
@@ -40,101 +42,135 @@ This command will copy config file in your config directory.
 ## Usage
 
 - [Send Message](#send-message)
-- [Delivery Reports](#delivery-reports)
+- [Check Status](#check-status)
 
 ### Send Message
 
 ```php
+use Zorb\Sender\Enums\MessageStatus;
 use Zorb\Sender\Enums\MessageType;
-use Zorb\Sender\Sender;
+use Zorb\Sender\Facades\Sender;
 
-public function __invoke(Sender $sender)
+class SenderController extends Controller
 {
-  $result = $sender->send('511001100', 'Example message goes here', MessageType::Advertising);
-}
-```
-
-By default, third parameter is Information (without SMS NO);
-Successful result will return following data:
-
-```json
-{
-  "data": [
+    //
+    public function __invoke()
     {
-      "messageId": "123123",
-      "statusId": 1
+        // recipient who should get sms
+        $mobile_number = '5XXXXXXXX';
+    
+        // content of the message
+        $message = 'Welcome, you are getting this message from integration';
+
+        // type of the message
+        $type = MessageType::Advertising; // MessageType::Information
+
+        $result = Sender::send($mobile_number, $message, $type);
+        
+        if (isset($result->data[0])) {
+            // $result->data[0]->messageId
+            // $result->data[0]->statusId
+
+            if ((int)$result->data[0]->statusId === MessageStatus::Delivered) {
+                // message has been sent
+            }
+        } else {
+            // message was not sent
+        }
     }
-  ]
-}
+} 
 ```
 
-#### Message types can be:
-
-1. Advertisement (with SMS NO)
-2. Information (Without SMS NO)
-
-These types can be found in `Zorb\Sender\Enums\MessageType`;
-
-### Delivery Reports
+### Check Status
 
 ```php
-  $result = $sender->report(123123);
-```
+use Zorb\Sender\Enums\MessageStatus;
+use Zorb\Sender\Facades\Sender;
 
-Successful result will return following data:
-
-```json
+class SenderController extends Controller
 {
-  "data": [
+    //
+    public function __invoke()
     {
-      "messageId": "2373263",
-      "statusId": "1",
-      "timestamp": "2020-08-03 22:19:44"
+        // message id provided by send method
+        $message_id = 0000;
+
+        $result = Sender::check($message_id);
+        
+        if (isset($result->data[0])) {
+            // $result->data[0]->messageId
+            // $result->data[0]->statusId
+            // $result->data[0]->timestamp
+
+            if ((int)$result->data[0]->statusId === MessageStatus::Delivered) {
+                // message has been delivered
+            }
+        } else {
+            // message status check failed
+        }
     }
-  ]
-}
+} 
 ```
-
-#### Status id can be:
-0. Pending
-1. Delivered
-2. Undelivered
-
-These types can be found in `Zorb\Sender\Enums\MessageStatus`;
 
 ## Notification
 
-You can you this package as notification channel.
+You can use this package as notification channel.
 
 ```php
+use Illuminate\Notifications\Notification;
+use Zorb\Sender\Notifications\SMSMessage;
 use Zorb\Sender\Channels\SenderChannel;
-use Zorb\Sender\Notifications\SmsMessage;
 
-//
-public function via($notifiable)
+class WelcomeNotification extends Notification
 {
-    return [SenderChannel::class];
-}
-
-//
-public function toTwilioSms($notifiable): SmsMessage
-{
-    return (new SmsMessage())
-        ->content('Your message goes here.')
-        ->recipient($notifiable->phone);
+    //
+    public function via($notifiable)
+    {
+        return [SenderChannel::class];
+    }
+    
+    //
+    public function toSender($notifiable): SMSMessage
+    {
+        return (new SMSMessage())
+            ->content('Your message goes here.')
+            ->recipient($notifiable->phone);
+    }
 }
 ```
+
+## Additional Information
+
+### MessageType
+
+Message types has its own enum `Zorb\Sender\Enums\MessageType`
+
+| Key | Value |
+| --- | :---: |
+| Advertising | 1 |
+| Information | 2 |
+
+### MessageStatus
+
+Message statuses has its own enum `Zorb\Sender\Enums\MessageStatus`
+
+| Key | Value |
+| --- | :---: |
+| Pending | 0 |
+| Delivered | 1 |
+| Undelivered | 2 |
 
 ## Configuration
 
 You can configure environment file with following variables:
 
-```
-SENDER_DEBUG=true/false
-SENDER_API_KEY=API_KEY_FROM_SENDER_HERE
-```
+| Key | Type | Default | Meaning |
+| --- | :---: | --- | --- |
+| SENDER_DEBUG | bool | false | This value decides to log or not to log requests. |
+| SENDER_API_KEY | string |  | This is the api key, which should be generated by sender.ge tech stuff. |
+| SENDER_API_URL | string | https://sender.ge/api | This is the url provided by sender.ge support. |
 
 ## License
 
-laravel-sender is licensed under a [MIT License](https://github.com/zgabievi/laravel-sender/blob/master/LICENSE).
+[zgabievi/laravel-sender](https://github.com/zgabievi/laravel-sender) is licensed under a [MIT License](https://github.com/zgabievi/laravel-sender/blob/master/LICENSE).
 
