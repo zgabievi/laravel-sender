@@ -1,3 +1,5 @@
+[![laravel-sender](https://banners.beyondco.de/SMS%20Sender.jpeg?theme=light&packageName=zgabievi%2Flaravel-sender&pattern=topography&style=style_1&description=SENDER.GE+Integration+for+Laravel&md=1&showWatermark=0&fontSize=100px&images=chat)](https://github.com/zgabievi/laravel-sender)
+
 # SENDER.GE Integration for Laravel
 
 [![Packagist](https://img.shields.io/packagist/v/zgabievi/laravel-sender.svg)](https://packagist.org/packages/zgabievi/laravel-sender)
