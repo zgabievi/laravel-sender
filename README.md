@@ -4,6 +4,8 @@
 [![Packagist](https://img.shields.io/packagist/dt/zgabievi/laravel-sender.svg)](https://packagist.org/packages/zgabievi/laravel-sender)
 [![license](https://img.shields.io/github/license/zgabievi/laravel-sender.svg)](https://packagist.org/packages/zgabievi/laravel-sender)
 
+[![laravel-sender](https://raw.githubusercontent.com/zgabievi/laravel-sender/main/assets/sender.png)](https://github.com/zgabievi/laravel-sender)
+
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
