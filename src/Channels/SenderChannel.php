@@ -2,8 +2,8 @@
 
 namespace Zorb\Sender\Channels;
 
-use Illuminate\Notifications\Notification;
 use Zorb\Sender\Sender;
+use Illuminate\Notifications\Notification;
 
 class SenderChannel
 {
@@ -15,9 +15,15 @@ class SenderChannel
     {
         $message = $notification->toSender($notifiable);
 
-        (new Sender())->send(
+        $response = (new Sender())->send(
             $message->getRecipient(),
             $message->getContent()
         );
+
+        $callback = $message->getCallback();
+
+        if ($callback instanceof \Closure) {
+            $callback($response);
+        }
     }
 }

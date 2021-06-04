@@ -122,6 +122,7 @@ You can use this package as notification channel.
 use Illuminate\Notifications\Notification;
 use Zorb\Sender\Notifications\SMSMessage;
 use Zorb\Sender\Channels\SenderChannel;
+use Illuminate\Support\Facades\Log;
 
 class WelcomeNotification extends Notification
 {
@@ -136,7 +137,10 @@ class WelcomeNotification extends Notification
     {
         return (new SMSMessage())
             ->content('Your message goes here.')
-            ->recipient($notifiable->phone);
+            ->recipient($notifiable->phone)
+            ->callback(function ($response) { // optional
+                // use response here
+            });
     }
 }
 ```
