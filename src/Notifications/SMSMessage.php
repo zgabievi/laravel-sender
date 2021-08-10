@@ -56,9 +56,9 @@ class SMSMessage
     }
 
     /**
-     * @return \Closure
+     * @return \Closure|null
      */
-    public function getCallback(): \Closure
+    public function getCallback(): ?\Closure
     {
         return $this->_callback;
     }
